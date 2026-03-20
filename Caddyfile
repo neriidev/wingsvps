@@ -1,0 +1,4 @@
+# Domínio via variável WINGS_FQDN (docker-compose carrega .env)
+{$WINGS_FQDN} {
+	reverse_proxy 127.0.0.1:8080
+}
