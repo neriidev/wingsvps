@@ -1,6 +1,6 @@
 # VPS — Wings + Caddy só com Docker
 
-Sobe **Wings** e **Caddy** (Let’s Encrypt) com **`docker compose`**. As variáveis ficam no próprio **`docker-compose.yml`** (blocos `x-wings-env` e `x-caddy-env`). Na primeira subida o Wings corre **`wings configure`** sozinho — não precisas de `.env` nem systemd no host.
+Sobe **Wings** e **Caddy** (Let’s Encrypt) com **`docker compose`** (plugin **v2** do Docker). **Não** uses o pacote antigo **`docker-compose`** do `apt` (Compose v1) — dá erros tipo `KeyError: 'id'`. As variáveis ficam no próprio **`docker-compose.yml`** (blocos `x-wings-env` e `x-caddy-env`). Na primeira subida o Wings corre **`wings configure`** sozinho — não precisas de `.env` nem systemd no host.
 
 ## Como funciona
 

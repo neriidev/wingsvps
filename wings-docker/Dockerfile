@@ -4,8 +4,10 @@ ARG WINGS_VERSION=1.12.1
 ARG YQ_VERSION=4.45.1
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    ca-certificates curl \
+    ca-certificates curl tzdata \
     && rm -rf /var/lib/apt/lists/*
+
+ENV TZ=UTC
 
 RUN ARCH=$(uname -m) \
     && if [ "$ARCH" = "x86_64" ]; then WARCH=amd64; \

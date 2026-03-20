@@ -7,6 +7,11 @@ if ! command -v docker &>/dev/null; then
   exit 1
 fi
 
+if ! docker compose version &>/dev/null; then
+  echo "Erro: precisas do plugin 'docker compose' (v2). O pacote apt 'docker-compose' (v1) não serve."
+  exit 1
+fi
+
 if grep -q 'ptla_SUBSTITUIR_PELA_APPLICATION_API_KEY' docker-compose.yml 2>/dev/null; then
   echo "Edita docker-compose.yml: define WINGS_APP_API_TOKEN em x-wings-env (e o resto conforme precisares)."
   exit 1

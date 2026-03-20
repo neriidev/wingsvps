@@ -1,4 +1,9 @@
-# Domínio via variável WINGS_FQDN (docker-compose carrega .env)
+# Evita redirecionar HTTP→HTTPS durante o challenge ACME; senão o pedido
+# https://FQDN/.well-known/... vai para o Wings e devolve 401.
+{
+	auto_https disable_redirects
+}
+
 {$WINGS_FQDN} {
 	reverse_proxy 127.0.0.1:8080
 }
