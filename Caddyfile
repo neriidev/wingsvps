@@ -5,5 +5,11 @@
 }
 
 {$WINGS_FQDN} {
-	reverse_proxy 127.0.0.1:8080
+	tls {
+		issuer acme {
+			disable_tlsalpn_challenge
+		}
+	}
+	@notAcme not path /.well-known/acme-challenge/*
+	reverse_proxy @notAcme 127.0.0.1:8080
 }
