@@ -7,7 +7,7 @@ x-wings-env: &wings-env
   WINGS_BEHIND_CADDY: "1"
 
 x-caddy-env: &caddy-env
-  WINGS_FQDN: "srv.vulkan.ninja"
+  WINGS_FQDN: "srv1.vulkan.ninja"
 
 # Wings + Caddy — caminhos no host alinham com o Docker daemon para os game servers.
 services:

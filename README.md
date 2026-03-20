@@ -40,7 +40,7 @@ docker compose build wings && docker compose up -d
 | `WINGS_PANEL_URL` | `https://painel.tld` |
 | `WINGS_APP_API_TOKEN` | Chave **Application API** (`ptla_...`) |
 | `WINGS_NODE_ID` | ID numérico do node |
-| `WINGS_FQDN` | Subdomínio público (ex.: `srv.vulkan.ninja`) |
+| `WINGS_FQDN` | Subdomínio público (ex.: `srv1.vulkan.ninja`) |
 | `WINGS_BEHIND_CADDY` | `"1"` recomendado (HTTP 8080 atrás do Caddy) |
 | `WINGS_FORCE_CONFIGURE` | `"1"` para voltar a correr `wings configure` no arranque |
 
