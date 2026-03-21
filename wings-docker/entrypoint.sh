@@ -13,6 +13,18 @@ fix_behind_caddy() {
   yq -i '.api.port = 8080 | .api.ssl.enabled = false' /etc/pterodactyl/config.yml
 }
 
+# Muda a subnet do pterodactyl0 para evitar conflito com redes Docker existentes.
+fix_docker_subnet() {
+  [[ -f /etc/pterodactyl/config.yml ]] || return 0
+  local subnet="${WINGS_DOCKER_SUBNET:-172.20.0.0/16}"
+  local gateway="${WINGS_DOCKER_GATEWAY:-172.20.0.1}"
+  yq -i "
+    .docker.network.interface = \"${gateway}\" |
+    .docker.network.interfaces.v4.subnet = \"${subnet}\" |
+    .docker.network.interfaces.v4.gateway = \"${gateway}\"
+  " /etc/pterodactyl/config.yml
+}
+
 if [[ ! -s /etc/pterodactyl/config.yml ]] || [[ "${WINGS_FORCE_CONFIGURE:-0}" == "1" ]]; then
   : "${WINGS_PANEL_URL:?defina WINGS_PANEL_URL no .env}"
   : "${WINGS_APP_API_TOKEN:?defina WINGS_APP_API_TOKEN (ptla_...) no .env}"
@@ -23,8 +35,10 @@ if [[ ! -s /etc/pterodactyl/config.yml ]] || [[ "${WINGS_FORCE_CONFIGURE:-0}" ==
     --node "$WINGS_NODE_ID" \
     --override
   fix_behind_caddy
+  fix_docker_subnet
 else
   fix_behind_caddy
+  fix_docker_subnet
 fi
 
 exec wings
