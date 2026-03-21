@@ -8,6 +8,15 @@ x-wings-env: &wings-env
 
 x-caddy-env: &caddy-env
   WINGS_FQDN: "srv1.vulkan.ninja"
+  # Caddyfile remoto (https://...). Vazio = usa ./Caddyfile montado em /etc/caddy/Caddyfile.
+  CADDYFILE_URL: "https://raw.githubusercontent.com/neriidev/wingsvps/refs/heads/main/Caddyfile"
+
+# MySQL para plugins dos servidores (LuckyPerms, etc.). Edita senhas antes de subir.
+x-mysql-env: &mysql-env
+  MYSQL_ROOT_PASSWORD: "altera_esta_senha_root"
+  MYSQL_DATABASE: "plugins"
+  MYSQL_USER: "plugins"
+  MYSQL_PASSWORD: "altera_esta_senha"
 
 # Wings + Caddy — caminhos no host alinham com o Docker daemon para os game servers.
 services:
@@ -35,11 +44,36 @@ services:
       - wings
     environment:
       <<: *caddy-env
+    entrypoint: ["/bin/sh", "/caddy/run.sh"]
+    command: []
     volumes:
+      - ./caddy/run.sh:/caddy/run.sh:ro
       - ./Caddyfile:/etc/caddy/Caddyfile:ro
       - caddy_data:/data
       - caddy_config:/config
 
+  mysql:
+    image: mysql:8.0
+    restart: unless-stopped
+    environment:
+      <<: *mysql-env
+    command:
+      - --default-authentication-plugin=mysql_native_password
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+    ports:
+      # Game servers (contentores) ligam ao IP do host:3306 — ex. 172.17.0.1 em Linux (bridge).
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
 volumes:
   caddy_data:
   caddy_config:
+  mysql_data:
