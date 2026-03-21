@@ -8,8 +8,8 @@ x-wings-env: &wings-env
 
 x-caddy-env: &caddy-env
   WINGS_FQDN: "srv1.vulkan.ninja"
-  # Caddyfile remoto (https://...). Vazio = usa ./Caddyfile montado em /etc/caddy/Caddyfile.
-  CADDYFILE_URL: "https://raw.githubusercontent.com/neriidev/wingsvps/refs/heads/main/Caddyfile"
+  # Caddyfile remoto (https://...). Vazio = usa caddy/Caddyfile (montado em /caddy/).
+  CADDYFILE_URL: "https://raw.githubusercontent.com/neriidev/wingsvps/main/caddy/Caddyfile"
 
 # MySQL para plugins dos servidores (LuckyPerms, etc.). Edita senhas antes de subir.
 x-mysql-env: &mysql-env
@@ -47,8 +47,8 @@ services:
     entrypoint: ["/bin/sh", "/caddy/run.sh"]
     command: []
     volumes:
-      - ./caddy/run.sh:/caddy/run.sh:ro
-      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      # Um único bind de pasta evita falhas em hosts onde montar um ficheiro solto cria diretório errado.
+      - ./caddy:/caddy:ro
       - caddy_data:/data
       - caddy_config:/config
 

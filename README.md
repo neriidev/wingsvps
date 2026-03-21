@@ -82,13 +82,23 @@ Para subir só o MySQL (útil para testar): `docker compose up -d mysql`
 O Docker **não** faz bind mount de URLs. O Caddy suporta carregar um Caddyfile por **HTTPS**: define no **`x-caddy-env`**:
 
 ```yaml
-CADDYFILE_URL: "https://exemplo.com/Caddyfile"
+CADDYFILE_URL: "https://raw.githubusercontent.com/USUARIO/REPO/main/caddy/Caddyfile"
 ```
 
 Exemplos de origem: **raw** do GitHub/GitLab, bucket com URL pública, etc. Mantém **`WINGS_FQDN`** (e outras `{$VAR}`) no ficheiro remoto — o Caddy substitui com as variáveis de ambiente do serviço `caddy` no compose.
 
-- Com **`CADDYFILE_URL` vazio** (`""`), usa o ficheiro local **`./Caddyfile`** montado em `/etc/caddy/Caddyfile` (arranque via **`caddy/run.sh`**).
-- Com URL definida, o mount local é ignorado na prática; podes comentar a linha do volume `./Caddyfile` se já não precisares de cópia local.
+- Com **`CADDYFILE_URL` vazio** (`""`), usa o ficheiro local **`caddy/Caddyfile`** (a pasta **`caddy/`** inteira monta em **`/caddy`** no contentor).
+- Com URL definida, o Caddy lê da rede; o **`caddy/Caddyfile`** local continua no repositório como cópia / referência e o mount da pasta **`caddy/`** ainda é necessário para o **`run.sh`**.
+
+### Deploy (Hostinger / clone só do compose)
+
+Se aparecer *mount … not a directory* em `Caddyfile`: no primeiro arranque o Docker pode ter criado um **diretório** com esse nome no host. No servidor, remove e volta a fazer deploy após ter o repositório completo com **`caddy/Caddyfile`** e **`caddy/run.sh`**:
+
+```bash
+rm -rf /docker/wingsvps2/Caddyfile
+```
+
+(Ajusta o caminho ao que o painel mostrar no erro.)
 - Usa **HTTPS** e uma fonte em que confies: quem controla essa URL controla a config do reverse proxy.
 
 ## Cloudflare
