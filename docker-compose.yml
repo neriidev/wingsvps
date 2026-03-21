@@ -3,7 +3,7 @@ x-wings-env: &wings-env
   WINGS_PANEL_URL: "https://panel.vulkan.ninja"
   WINGS_APP_API_TOKEN: "ptla_StET8dM982N0FqSKiElvEObxSYQScsbeIPXrh9gPoLk"
   WINGS_NODE_ID: "3"
-  WINGS_FORCE_CONFIGURE: "0"
+  WINGS_FORCE_CONFIGURE: "1"
   WINGS_BEHIND_CADDY: "1"
 
 x-caddy-env: &caddy-env
