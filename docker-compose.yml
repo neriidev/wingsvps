@@ -8,7 +8,7 @@ x-wings-env: &wings-env
 
 x-caddy-env: &caddy-env
   WINGS_FQDN: "srv1.vulkan.ninja"
-  # Caddyfile remoto (https://...). Vazio = usa caddy/Caddyfile (montado em /caddy/).
+  # Caddyfile remoto (https://...). Vazio = usa caddy/Caddyfile montado em /caddy-data/Caddyfile.
   CADDYFILE_URL: "https://raw.githubusercontent.com/neriidev/wingsvps/main/caddy/Caddyfile"
 
 # MySQL para plugins dos servidores (LuckyPerms, etc.). Edita senhas antes de subir.
@@ -37,18 +37,19 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
 
   caddy:
-    image: caddy:2-alpine
+    build:
+      context: ./caddy
+      dockerfile: Dockerfile
     restart: unless-stopped
     network_mode: host
     depends_on:
       - wings
     environment:
       <<: *caddy-env
-    entrypoint: ["/bin/sh", "/caddy/run.sh"]
     command: []
     volumes:
-      # Um único bind de pasta evita falhas em hosts onde montar um ficheiro solto cria diretório errado.
-      - ./caddy:/caddy:ro
+      # Opcional: Caddyfile local quando CADDYFILE_URL está vazio. O run.sh vem da imagem (build).
+      - ./caddy:/caddy-data:ro
       - caddy_data:/data
       - caddy_config:/config
 

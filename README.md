@@ -87,12 +87,12 @@ CADDYFILE_URL: "https://raw.githubusercontent.com/USUARIO/REPO/main/caddy/Caddyf
 
 Exemplos de origem: **raw** do GitHub/GitLab, bucket com URL pública, etc. Mantém **`WINGS_FQDN`** (e outras `{$VAR}`) no ficheiro remoto — o Caddy substitui com as variáveis de ambiente do serviço `caddy` no compose.
 
-- Com **`CADDYFILE_URL` vazio** (`""`), usa o ficheiro local **`caddy/Caddyfile`** (a pasta **`caddy/`** inteira monta em **`/caddy`** no contentor).
-- Com URL definida, o Caddy lê da rede; o **`caddy/Caddyfile`** local continua no repositório como cópia / referência e o mount da pasta **`caddy/`** ainda é necessário para o **`run.sh`**.
+- Com **`CADDYFILE_URL` vazio** (`""`), usa o ficheiro local **`caddy/Caddyfile`** (a pasta **`caddy/`** monta em **`/caddy-data`** no contentor).
+- O arranque usa **`caddy/Dockerfile`**: o **`run.sh`** fica **dentro da imagem**, por isso não depende do bind mount (útil na Hostinger quando o clone não expõe bem a pasta). Com **URL definida**, o mount **`./caddy`** só é necessário se quiseres cópia local em paralelo; podes comentá-lo se usares só remoto.
 
 ### Deploy (Hostinger / clone só do compose)
 
-Se aparecer *mount … not a directory* em `Caddyfile`: no primeiro arranque o Docker pode ter criado um **diretório** com esse nome no host. No servidor, remove e volta a fazer deploy após ter o repositório completo com **`caddy/Caddyfile`** e **`caddy/run.sh`**:
+Se aparecer *mount … not a directory* em `Caddyfile`: no primeiro arranque o Docker pode ter criado um **diretório** com esse nome no host. No servidor, remove e volta a fazer deploy após ter o repositório completo com **`caddy/`** (inclui **`Dockerfile`**, **`run.sh`** e **`Caddyfile`**):
 
 ```bash
 rm -rf /docker/wingsvps2/Caddyfile
